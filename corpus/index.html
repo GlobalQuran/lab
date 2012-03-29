@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en" dir="lrt">
+<head>
+	<script>
+		//var apiURL = 'http://api.globalquran.im/'; 	// remove this line
+		//var swfPath = 'http://quran.im/images'; 	// remove this line
+		var googleAnalyticsID; //UA-30306460-1';					// add your google analytics id here
+	</script>
+	<meta charset="utf-8">
+	<title>GlobalQuran.com (Beta)</title>
+	<meta name="description" content="Browse, Search, and Listen to the Holy Quran. With accurate quran text and quran translations in various languages." />
+	<meta name="keywords" content="Quran, Quran Text, Translation, Recitation, Authentic, Precise, Accurate, Verified, Qur'an, Al-Qur'an, Kuran, Koran, Search Quran, Roots, Recite, Tartil, Tarteel, ????, ?????, ?????, ?????, ????? ????, ???? ????, ?????, ?????, ????" />
+		
+	<meta property="og:site_name" content="GlobalQuran.com" />
+	<meta property="og:title" content="GlobalQuran.com : Quran Navigator" />
+	<meta property="og:description" content="Browse, Search, and Listen to the Holy Quran. With accurate quran text and quran translations in various languages." />
+	<meta property="og:url" content="http://GlobalQuran.com" />
+	<meta property="og:image" content="http://GlobalQuran.com/images/logo.png" />
+	<meta property="og:type" content="book" />
+	
+	<link rel="shortcut icon" href="http://GlobalQuran.com/favicon.ico" />
+	<link rel="stylesheet" href="images/themes/default/css/global.css" media="screen,print" />
+	<link rel="stylesheet" href="images/themes/default/css/print.css" media="print" />
+	<link rel="stylesheet" href="../plugins/quran-grammar/PluginQuranGrammar.css" media="print" />
+	<style type="text/css">
+		span.r1, span.r2, span.r3{
+			//font-size: 1.5em !important;
+			font-weight:bold !important;
+		}
+		span.r1 {
+			color: red;
+		}
+		span.r2 {
+			color: green;
+		}
+		span.r3 {
+			color: blue;
+		}
+
+		.segGray { 
+			color: rgb(87, 87, 87);
+		}
+
+		.POS-N, .segSky {
+			color: rgb(84, 141, 212);
+		}
+
+		.POS-PN, .segBlue {
+			color: rgb(37, 126, 156);
+		}
+
+		.POS-ADJ, .segPurple {
+			color: rgb(129, 38, 192);
+		}
+
+		.POS-DEM, .segBrown {
+			color: rgb(191, 159, 62);
+		}
+
+		.POS-PRON, .segMetal {
+			color: rgb(92, 112, 133);
+		}
+
+		.POS-REL, .POS-SUB, .POS-INT, .segGold {
+			color: rgb(129, 116, 24);
+		}
+
+		.POS-V, .segSeagreen {
+			color: rgb(50, 189, 47);
+		}
+
+		.segGreen {
+			color: rgb(29, 105, 20);
+		}
+
+		.POS-PRO, .POS-NEG, .segRed {
+			color: rgb(244, 64, 11);
+		}
+
+		.POS-P, .segRust {
+			color: rgb(173, 35, 35);
+		}
+
+		.POS-IMPN, .POS-EQ, .POS-ACC, .POS-RES, .POS-SUP, .POS-AMD, .POS-ANS, .POS-AVR, .POS-EXP, .POS-EXH, .POS-EXL, .POS-FUT, .POS-INC, .POS-RET, .POS-SUR, .segPink {
+			color: rgb(168, 1, 123);
+		}
+
+		.POS-INTG, .segRose {
+			color: rgb(253, 81, 98);
+		}
+
+		.POS-REM, .POS-CONJ, .segNavy {
+			color: rgb(19, 1, 184);
+		}
+
+		.POS-T, .POS-LOC, .POS-INL, .POS-COND, .segOrange {
+			color: rgb(227, 112, 16);
+		}
+
+		.segSilver {
+			color: rgb(180, 180, 180);
+		}
+	</style>
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-30306460-1']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+</head>
+<body class="ltr">
+<noscript> <p>JavaScript must be enabled to use this site. Please enable JavaScript in your browser and refresh the page. <a href="http://www.google.com.pk/search?q=how+to+enable+javascript">How to enable javascript?</a></p> </noscript>
+<style>
+/* Top Global Sites mainbar */
+.mainbar {
+  position:absolute;
+  *position: absolute;
+  *z-index: 2;
+  overflow: visible;
+  margin-bottom: 18px;
+  top:0px;
+  right:0px;
+  left:0px;
+  z-index: 1030;
+  background-color: #2D2D2D;
+  font-size:13px;
+}
+.mainbar-inner {
+  height:22px;
+  padding-top: 4px;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: #2D2D2D;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+.mainbar .container {
+  width: auto;
+  height: 20px;
+  padding-right:8px;
+  padding-left: 8px;
+}
+.btn-mainbar {
+  display: none;
+  float: right;
+  padding: 7px 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-color: #fbdc81 #fbdc81 #f9c737;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  filter: progid:dximagetransform.microsoft.gradient(enabled=false);
+  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.075);
+  -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.075);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.075);
+}
+.btn-mainbar:hover,
+.btn-mainbar:active,
+.btn-mainbar.active,
+.btn-mainbar.disabled,
+.btn-mainbar[disabled] {
+  background-color: #fbdc81;
+}
+.btn-mainbar:active,
+.btn-mainbar.active {
+  background-color: #f9ce50 \9;
+}
+.btn-mainbar .icon-bar {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background-color: #f5f5f5;
+  -webkit-border-radius: 1px;
+  -moz-border-radius: 1px;
+  border-radius: 1px;
+  -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+}
+.btn-mainbar .icon-bar + .icon-bar {
+  margin-top: 3px;
+}
+.nav-collapse.collapse {
+  height: auto;
+}
+.mainbar {
+  color: #333333;
+}
+.mainbar .brand:hover {
+  text-decoration: none;
+}
+.mainbar .mainbar-text {
+  margin-bottom: 0;
+  line-height: 80px;
+}
+.mainbar .btn,
+.mainbar .btn-group {
+  margin-top: 25px;
+}
+.mainbar .btn-group .btn {
+  margin-top: 0;
+}
+.mainbar-form {
+  margin-bottom: 0;
+  *zoom: 1;
+}
+.mainbar-form:before,
+.mainbar-form:after {
+  display: table;
+  content: "";
+}
+.mainbar-form:after {
+  clear: both;
+}
+.mainbar-form input,
+.mainbar-form select,
+.mainbar-form .radio,
+.mainbar-form .checkbox {
+  margin-top: 25px;
+}
+.mainbar-form input,
+.mainbar-form select {
+  display: inline-block;
+  margin-bottom: 0;
+}
+.mainbar-form input[type="image"],
+.mainbar-form input[type="checkbox"],
+.mainbar-form input[type="radio"] {
+  margin-top: 3px;
+}
+.mainbar-form .input-append,
+.mainbar-form .input-prepend {
+  margin-top: 6px;
+  white-space: nowrap;
+}
+.mainbar-form .input-append input,
+.mainbar-form .input-prepend input {
+  margin-top: 0;
+}
+.mainbar-search {
+  position: relative;
+  float: left;
+  margin-top: 26px;
+  margin-bottom: 0;
+}
+.mainbar-search .search-query {
+  padding: 4px 9px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 1;
+  color: #ffffff;
+  background-color: #fffefd;
+  border: 1px solid #fad568;
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0px rgba(255, 255, 255, 0.15);
+  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0px rgba(255, 255, 255, 0.15);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0px rgba(255, 255, 255, 0.15);
+  -webkit-transition: none;
+  -moz-transition: none;
+  -ms-transition: none;
+  -o-transition: none;
+  transition: none;
+}
+.mainbar-search .search-query:-moz-placeholder {
+  color: #cccccc;
+}
+.mainbar-search .search-query::-webkit-input-placeholder {
+  color: #cccccc;
+}
+.mainbar-search .search-query:focus,
+.mainbar-search .search-query.focused {
+  padding: 5px 10px;
+  color: #333333;
+  text-shadow: 0 1px 0 #ffffff;
+  background-color: #ffffff;
+  border: 0;
+  -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+  outline: 0;
+}
+.mainbar .nav {
+  position: relative;
+  left: 0;
+  display: block;
+  float: left;
+  margin: 0 10px 0 0;
+}
+.mainbar .nav.pull-right {
+  float: right;
+}
+.mainbar .nav > li {
+  display: block;
+  float: left;
+}
+.mainbar .nav > li > a {
+  float: none;
+  padding: 5px 10px 5px 11px;
+  line-height: 19px;
+  color: #ccc;
+  text-decoration: none;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  border-top:#2D2D2D 2px solid;
+}
+.mainbar .nav > li > a:hover {
+  background-color:#666;
+  border-top:#666 2px solid;
+  color: #ffffff;
+  text-decoration: none;
+}
+.mainbar .nav .active > a,
+.mainbar .nav .active > a:hover {
+  color: #ffffff;
+  font-weight: bold;
+  text-decoration: none;
+  border-top:#ca3d36 2px solid;
+  background-color:#2D2D2D;
+}
+.mainbar .divider-vertical {
+  height: 40px;
+  width: 1px;
+  margin: 0 9px;
+  overflow: hidden;
+  background-color: #fbdc81;
+  border-right: 1px solid #fff7c1;
+}
+.mainbar .nav.pull-right {
+  margin-left: 10px;
+  margin-right: 0;
+}
+.mainbar .dropdown-menu {
+  margin-top: 1px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.mainbar .dropdown-menu:before {
+  content: '';
+  display: inline-block;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #ccc;
+  border-bottom-color: rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: -7px;
+  left: 9px;
+}
+.mainbar .dropdown-menu:after {
+  content: '';
+  display: inline-block;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #ffffff;
+  position: absolute;
+  top: -6px;
+  left: 10px;
+}
+.mainbar .nav .dropdown-toggle .caret,
+.mainbar .nav .open.dropdown .caret {
+  border-top-color: #ffffff;
+  border-bottom-color: #ffffff;
+}
+.mainbar .nav .active .caret {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+.mainbar .nav .open > .dropdown-toggle,
+.mainbar .nav .active > .dropdown-toggle,
+.mainbar .nav .open.active > .dropdown-toggle {
+  background-color: transparent;
+}
+.mainbar .nav .active > .dropdown-toggle:hover {
+  color: #ffffff;
+}
+.mainbar .nav.pull-right .dropdown-menu,
+.mainbar .nav .dropdown-menu.pull-right {
+  left: auto;
+  right: 0;
+}
+.mainbar .nav.pull-right .dropdown-menu:before,
+.mainbar .nav .dropdown-menu.pull-right:before {
+  left: auto;
+  right: 12px;
+}
+.mainbar .nav.pull-right .dropdown-menu:after,
+.mainbar .nav .dropdown-menu.pull-right:after {
+  left: auto;
+  right: 13px;
+}
+#gqMain, #gqMain .socialLike {
+	margin-top:3em;
+}
+</style>
+<div class="mainbar">
+      <div class="mainbar-inner">
+        <div class="container">
+              <ul class="nav pull-right">
+              <li><a href="http://blog.globalquran.com/forums/">Feedback</a></li>
+              <li><a href="http://labs.globalquran.com"><img src="http://labs.quran.im/img/favicon.png" width="18" /> Back to Lab</a></li>
+            </ul>
+        </div>
+      </div>
+    </div>  
+<div id="gqMain" style="display:none;">
+	<div id="globalHeader">
+		<div class="logoBox"><a href="#home" class="icon logo">GlobalQuran</a></div>
+		<!-- nav here -->
+		<div id="topNav">
+			<div id="playerNavBox">
+				<ul id="pageNav">
+					<li class="page"><span class="pageOn">1</span> <span class="sep">of</span> <span class="totalPages">604</span></li>
+					<li id="prevPage"><a href="#!/quran-uthmani|en.sahih/1:1" class="prevPage button rndL tips" data-tips-position="left center"><span class="icon prevPage">Previous Page</span></a></li>
+					<li id="nextPage"><a href="#!/quran-uthmani|en.sahih/1:1" class="nextPage button rndR tips" data-tips-position="right center"><span class="icon nextPage">Next Page</span></a></li>
+				<!--<li id="prevPage"><a href="#!/ur.junagarhi|quran-tajweed/1:1" class="prevPage button rndL tips" data-tips-position="left center"><span class="icon prevPage">Previous Page</span></a></li>
+					<li id="nextPage"><a href="#!/ur.junagarhi|quran-tajweed/1:1" class="nextPage button rndR tips" data-tips-position="right center"><span class="icon nextPage">Next Page</span></a></li>-->
+				</ul>
+				<ul id="playerNav">
+					<li id="recitor" class="dropOption" style="display:none;"><a href="#" class="dropLink tips" data-tips-position="right center"><span class="icon recitor">Select Recitor</span></a>
+						<ul class="recitorList"></ul>
+					</li>
+					<li id="prevAyah" style="display:none;"><a href="#" class="icon prevAyah">Previous Ayah</a></li>
+					<li id="nextAyah" style="display:none;"><a href="#" class="icon nextAyah">Next Ayah</a></li>
+					<li id="play"><a href="#" class="icon play">play</a></li>
+					<li id="progressBar" style="display:none;">
+						<div class="progressBar" title="0:00"><span class="buffer" style="width: 0%;"></span></div>
+					</li>
+					<li id="time" style="display:none;"><span class="playingTime">0:00</span><span class="sep">/</span><span class="totalTime">0:00</span></li>
+					<li id="bandwidthOption" class="dropOption" style="display:none;"><span class="dropLink tips" data-tips-position="right center" title="Audio Quality"><span class="bandwidthOption">192 kbs</span> <span class="icon arrowDown"></span></span>
+						<ul class="bandwidthList"></ul>
+					</li>
+					<li id="volume" class="dropOption" style="display:none;"><a href="#" class="dropLink tips" title="Click to Mute Volume" data-tips-position="right center"><span class="icon volume full">Volume</span></a>
+						<ul>
+							<li class="volumePercent">68%</li>
+							<li><div class="volumeBar"></div></li>
+						</ul>
+					</li>
+					<li id="repeat" class="dropOption" style="display:none;"><a href="#" class="dropLink active tips" data-tips-position="right center"><span class="icon repeat">Repeat</span></a>
+						<ul class="repeatOptions">
+							<li><label>Repeat Each</label> <select class="repeatEach" name="repeatEach"><option value="ayah">Ayah</option><option value="page">Page</option><option value="surah">Surah</option><option value="Juz">Juz</option></select></li>
+							<li><label>Repeat Times</label> <select class="repeatTimes" name="repeatTimes"><option value="1">x1</option><option value="2">x2</option><option value="3">x3</option><option value="4">x4</option><option value="5">x5</option><option value="6">x6</option><option value="7">x7</option><option value="8">x8</option><option value="9">x9</option><option value="0">&infin;</option></select></li>
+							<li><label>Delay</label> <select class="audioDelay" name="audiotDelay"><option value="0">0 sec</option><option value="1">1 sec</option><option value="2">2 sec</option><option value="3">3 sec</option><option value="4">4 sec</option><option value="5">5 sec</option><option value="6">6 sec</option><option value="7">7 sec</option><option value="8">8 sec</option><option value="9">9 sec</option><option value="ayah">Ayah Duration</option></select></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<div id="searchInfoBox" style="display:none;">
+				<ul id="searchNav">
+					<li id="searchAbout">About <span class="bold">300,000,000</span> results (0.14 seconds)</li>
+				</ul>
+				<ul id="searchInfo">
+					<li><a href="#home" class="bold">Done Searching Go Back</a></li>
+				</ul>				
+			</div>
+			<div id="statusNav">
+				<span class="currentAyah tips" title="Surah Al Nas"  data-tips-position="bottom center" data-tips-dynamic="true">00:00</span>
+				<ul>
+					<li><a href="http://blog.globalquran.com/feature-list/" class="gq spotLight">Feature List</a></li>
+					<!--
+					<li class="dropOption"><a href="#" class="dropLink">Tag</a>
+						<ul>
+							<li><span style="white-space:nowrap;">Tags coming very soon insha'Allah</span></li>
+						</ul>
+					</li>
+					 -->
+					<li><a href="#" class="print">Print</a></li>
+					<li class="dropOption"><a href="#" class="dropLink">Share</a>
+						<ul id="share">
+							
+							<li><a href="https://twitter.com/share" class="twitter-share-button" data-count="none">Tweet</a></li>
+							<li><div class="g-plusone" data-size="tall" data-annotation="none"></div></li>
+							<li>
+								<div class="addthis_toolbox addthis_default_style">
+									<a class="addthis_counter addthis_pill_style"></a>
+								</div>
+							</li>
+							<li class="fbLike"><div class="fb-like" data-send="false" data-width="50" data-show-faces="false"></div></li>
+							
+						</ul>
+					</li>
+					<li class="dropOption"><a href="#" class="dropLink">Link</a>
+						<ul class="linkShare">
+							<li><span>Paste link in <b>email</b>, <b>IM</b> or <b>Facebook</b> status.</span>
+								<label>Page URL:</label> <input type="text" class="pageUrl" value="#!/ur.junagarhi|quran-tajweed/601" />
+							</li>
+							<li><label>Ayah URL:</label> <input type="text" class="ayahUrl" value="#!/ur.junagarhi|quran-tajweed/103:3" /></li>
+							<li><a href="#" class="bookmark">Bookmark</a> </li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<div id="messageBox" style="display:none;">
+				<span class="error">msg</span> <a href="#" class="icon close tips">close</a>
+			</div>	
+			<div id="searchBox">
+				<form action="#" method="post" id="searchForm">
+					<input type="text" name="search" id="search" value="" placeholder="Search..." />
+					<!-- TODO <a href="#" class="searchTips">Tips</a> -->
+					<input type="submit" name="searchSubmit" id="searchSubmit" value="Submit" />
+				</form>
+			</div>
+			<div id="surahBox">
+				<form action="#" method="post">
+					<select name="surah" id="surah" class="customSurah"></select>
+					<input type="submit" name="surahSubmit" id="surahSubmit" value="Submit" />
+				</form>
+			</div>
+			<div id="extraTools">
+				<ul>
+					<li></li>
+					<li class="book"  style="display:none;"><a href="#" class="icon book tips" data-tips-position="left center">Book View</a></li>
+					<li class="zoomOUT"><a href="#" class="icon zoomOUT tips" data-tips-position="left center">Smaller Fonts</a></li>
+					<li class="zoomIN"><a href="#" class="icon zoomIN tips" data-tips-position="left center">Bigger Fonts</a></li>
+					<li class="fullScreen"><a href="#" class="icon fullScreen tips" data-tips-position="left center">Full Screen</a></li>
+					<li class="sideBarOptions" style="display:none;"><a href="#" class="sideBarOptions" data-tips-position="left center"><span class="off">Show Options</span><span class="on">Hide Options</span></a></li>
+				</ul>
+			</div>
+		</div>		
+	</div>	
+	<div id="gqContent">
+		<div id="infoSidebar">
+			<div id="quranSideBar">
+				<div class="headerTitle">
+					<h4>Quran</h4>
+					<a href="#" class="sideLink quranSettings">Settings</a>
+				</div>
+				<ul id="quranSettings" style="display:none;">
+					<li class="right"><a href="#" class="icon close tips">close</a>
+					<li><label>Quran Fonts [ <a href="#" class="lighter tips" title="Quran fonts are applied to quran text only">?</a> ]</label>
+						<select id="quranFont"><option selected="selected" value='auto'>Auto Select [Recommanded]</option><option value="me_quran">Me-Quran</option> <option value="Scheherazade">Scheherazade</option><option value="_PDMS_Saleem_QuranFont">PDMS Saleem Quran</option><option value="KFGQPC Uthman Taha Naskh">KFGQPC Uthman Taha Naskh</option><option value="Traditional Arabic">Traditional Arabic</option><option value="Arabic Typesetting">Arabic Typesetting</option><option value="Sakkal Majalla">Sakkal Majalla</option><option value="MS Uighur">MS Uighur</option><option value="XB Zar">XB Zar</option><option value="Arial">Arial</option><option value="Custom">Custom</option></select>
+					</li>
+					<li><label><input type="checkbox" id="showSigns" value='yes'> Show Pause Marks</label></li>
+					<li><label><input type="checkbox" id="showAlef" value='yes'> Show Small-Alef</label></li>
+					<li><label><input type="checkbox" id="wbwMouseOver" value='yes'> Word by Word Show On Mouse Over</label></li>
+				</ul>
+				<ul class="sideNav" id="quranList"></ul>
+				
+				<div class="headerTitle">
+					<h4>All Languages</h4>
+				</div>
+				<input type="text" id="languageSearch" name="languageSearch" value="" placeholder="Search..." />
+				<ul class="sideNav" id="translationList"></ul>
+			<!-- 	
+				<ul class="sideHelpLinks">
+					<li><a href="#">How to use the site [video]</a></li>
+					<li><a href="#">Keyboard Shortcuts</a></li>
+					<li><a href="#">Tajweed Rules</a></li>
+				</ul>
+			-->
+			</div>
+			<div id="searchSideBar" style="display:none;">
+				<div class="headerTitle">
+					<h4>Search Tips</h4>
+				</div>			
+				<ul class="sideNav">
+					<li><b>55</b> - jump quickly to page "55"</li>
+					<li><br /></li>
+					<li><b>114:1</b> - go to surah An-Nass 114</li>
+					<li><b>114:4</b> - go to surah An-Nass 114 and ayah 4</li>
+				</ul>
+				<div class="headerTitle">
+					<h4>got suggestions? </h4>
+				</div>			
+				<p>sent us your feedback.</p>
+			</div>
+		</div>
+		<div id="quranContentArea" class="contentHalfSidebar single medium">
+			<img src="images/themes/default/ajax-loader-large.gif" />
+		</div>
+	</div>
+	<div class="tajweedQuickHelp hide">
+		<ul>
+			<li><span class="color ikhf"></span> <span class="txt">ikhafa</span></li>
+			<li><span class="color ikhf_shfw"></span> <span class="txt">ikhafa Meem Saakin</span></li>
+			<li><span class="color qlq"></span> <span class="txt">Qalqala</span></li>
+			<li><span class="color iqlb"></span> <span class="txt">Qalb</span></li>
+			<li><span class="color idghm_shfw"></span> <span class="txt">Idghaam Meem Saakin</span></li>
+			<li><span class="color idgh_ghn"></span> <span class="txt">Idghaam with Ghunna</span></li>
+			<li><span class="color idgh_w_ghn"></span> <span class="txt">Idghaam without Ghunna</span></li>
+			<li><span class="color ghn"></span> <span class="txt">Ghunna</span></li>			
+			<li><a href="#">learn'em (coming soon)</a></li>
+		</ul>
+	</div>
+	<!-- end content -->
+	<div id="globalFooter">
+		<div class="copyright"> GlobalQuran.com © 2006 - 2011 ·</div>
+		<div class="globalLanguage">
+			<ul>
+				<li><a href="#change_language" title="Use this site in another language.">English (US)</a> coming soon)</li>
+			</ul>
+		</div>
+		<div class="socialLike">
+			<iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fwww.facebook.com%2Fpages%2FQuran-GlobalQurancom%2F192781430775518&layout=button&show_faces=false&width=50&action=like&colorscheme=light&height=24" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:50px; height:24px;" allowTransparency="true"></iframe> 
+			<div class="g-plusone" data-annotation="none" data-href="http://GlobalQuran.com"></div>
+			<a href="https://twitter.com/GlobalQuran" class="twitter-follow-button" data-show-screen-name="false" data-show-count="false">Follow</a>
+			<div class="supportMsg">click on like to support our project.</div>
+		</div>
+		<div class="gq nav">
+			<ul>
+				<li><a href="/">Home</a></li><li>·</li>
+				<li>Download - coming soon</li><li>·</li>
+				<li>API - writing documentation</li><li>·</li>
+				<li><a href="https://github.com/imegah/GlobalQuran.com-code">code</a></li><li>·</li>
+				<li><a href="http://blog.globalquran.com">blog</a></li><li>·</li>
+				<li><a href="http://blog.globalquran.com/about-us">about us</a></li><li>·</li>
+				<li><a href="http://blog.globalquran.com/contact-us">contact us</a> </li>
+			</ul>
+		</div>
+	</div>
+</div>
+<script src="javascript/jqueryWithTools.pack.js"></script>
+<script src="javascript/jquery/jquery.livequery.min.js"></script>
+<script src="javascript/jquery/jquery.blockUI.js"></script>
+<!-- development use only
+<script src="javascript/jquery/jquery.js"></script>
+<script src="javascript/jquery/jquery.qtip.min.js"></script>
+<script src="javascript/jquery/jquery-ui-1.8.15.custom.min.js"></script>
+<script src="javascript/jquery/jquery.jplayer.js"></script>
+ -->
+<!-- for production - use GlobalQuran.js and remove following three js files -->
+<script src="javascript/Quran.js"></script>
+<script src="javascript/GQ.js"></script>
+<script src="javascript/manzil1,7.js"></script>
+<script src="javascript/GQ-Custom.js"></script>
+<script src="javascript/Layout.js"></script>
+
+<script type="text/javascript">
+  var PLUGIN = PLUGIN_grammar = true; var SHARE=false;//make false, to disable grammar plugin
+  if(PLUGIN && PLUGIN_grammar) (function() {
+	var urlprefix = (location.href.split('#')[0]).match('.*\/'), url = urlprefix + '../plugins/quran-grammar/PluginQuranGrammar.js';
+	var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+	po.src = url; if(console) console.log(po.src);
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+	
+	var po2 = document.createElement('link'); po2.type = 'text/css'; po2.rel = 'stylesheet'; //po2.async = true;
+	po2.src = urlprefix + '../plugins/quran-grammar/PluginQuranGrammar.css';
+	var s2 = document.getElementsByTagName('head')[0]; s2.parentNode.insertBefore(po2, s2);
+  })();
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+	if (typeof(apiURL) != 'undefined' && apiURL)
+		QuranNavigator.apiURL = apiURL;
+	if (typeof(swfPath) != 'undefined' && swfPath)
+		QuranNavigator.player.swfPath = swfPath;
+	if (typeof(googleAnalyticsID) != 'undefined' && googleAnalyticsID)
+		QuranNavigator.googleAnalyticsID = googleAnalyticsID;
+	layout.init();
+//]]>
+</script>
+<script type="text/javascript">
+  if(SHARE)(function() {
+	var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+	po.src = 'https://apis.google.com/js/plusone.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>
+<script type="text/javascript">
+  if(SHARE)(function(){
+	var twitterWidgets = document.createElement('script');
+	twitterWidgets.type = 'text/javascript';
+	twitterWidgets.async = true;
+	twitterWidgets.src = '//platform.twitter.com/widgets.js';
+	document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+  })();
+</script>
+<div id="fb-root"></div>
+<script>if(SHARE)(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=291496434200831&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<!-- AddThis Button BEGIN -->
+<XXXscript type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4e753ce6632eaacf"></script>
+<!-- AddThis Button END -->
+
+<!-- This used to Check to see if there is Unicode support in browser-->
+<div style="visibility:hidden">
+  <span id="char-to-check">&#9839;</span>
+  <span id="not-renderable">&#xfffd;</span>
+</div>
+
+<!--<script src="javascript/manzil5,6.js"></script>
+<script src="javascript/manzil2,3,4.js"></script>
+-->
+<!--<script type="text/javascript" src="http://sdscdn.userreport.com/popup.min.js"></script><script type="text/javascript">try { _bvt.initSite('2a56faaf-211f-4c5c-adec-50f76e0aaa9d'); } catch(err) {}</script> -->
+</body>
+</html>

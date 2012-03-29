@@ -1,0 +1,88 @@
+.quranText{
+	word-spacing: 6px;
+	//text-align: justify;
+	line-height: 50px;
+	//vertical-align: middle;
+}
+
+.quranText.top.first{
+	word-spacing: 0px;
+} //For word2word dont use word-spacing.
+
+span.r1, span.r2, span.r3{
+	//font-size: 1.5em !important;
+	font-weight:bold !important;
+}
+span.r1 {
+	color: red;
+}
+span.r2 {
+	color: green;
+}
+span.r3 {
+	color: blue;
+}
+
+.segGray { 
+	color: rgb(87, 87, 87);
+}
+
+.POS-N, .segSky {
+	color: rgb(84, 141, 212);
+}
+
+.POS-PN, .segBlue {
+	color: rgb(37, 126, 156);
+}
+
+.POS-ADJ, .segPurple {
+	color: rgb(129, 38, 192);
+}
+
+.POS-DEM, .segBrown {
+	color: rgb(191, 159, 62);
+}
+
+.POS-PRON, .segMetal {
+	color: rgb(92, 112, 133);
+}
+
+.POS-REL, .POS-SUB, .POS-INT, .segGold {
+	color: rgb(129, 116, 24);
+}
+
+.POS-V, .segSeagreen {
+	color: rgb(50, 189, 47);
+}
+
+.segGreen {
+	color: rgb(29, 105, 20);
+}
+
+.POS-PRO, .POS-NEG, .segRed {
+	color: rgb(244, 64, 11);
+}
+
+.POS-P, .segRust {
+	color: rgb(173, 35, 35);
+}
+
+.POS-IMPN, .POS-EQ, .POS-ACC, .POS-RES, .POS-SUP, .POS-AMD, .POS-ANS, .POS-AVR, .POS-EXP, .POS-EXH, .POS-EXL, .POS-FUT, .POS-INC, .POS-RET, .POS-SUR, .segPink {
+	color: rgb(168, 1, 123);
+}
+
+.POS-INTG, .segRose {
+	color: rgb(253, 81, 98);
+}
+
+.POS-REM, .POS-CONJ, .segNavy {
+	color: rgb(19, 1, 184);
+}
+
+.POS-T, .POS-LOC, .POS-INL, .POS-COND, .segOrange {
+	color: rgb(227, 112, 16);
+}
+
+.segSilver {
+	color: rgb(180, 180, 180);
+}
