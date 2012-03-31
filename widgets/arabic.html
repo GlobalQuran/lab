@@ -296,9 +296,11 @@ initializeMapper();
 		var _html = '', _html1 = '';
 		if(_words) 
 		$.each(_words, function(a, word){
-			if(a>=SEARCH.maxhits && !SEARCH.returnall){ _html += "<BR/>"+ "<span style=color:maroon;font-size:0.2em;>Max results exceeded. Select <a href='javascript:SEARCH.returnall=true;process();return false;'>option</a> to see all results.</span><BR/>"; return false; }
+			if(a>=SEARCH.maxhits && !SEARCH.returnall){ _html += "<BR/>"+ "<span style=color:maroon;font-size:0.2em;>Max results exceeded. Click <a href='javascript:SEARCH.returnall=true;process();return false;'>here</a> to see all results.</span><BR/>"; return false; }
 			else _html += EnToAr(word) + '&nbsp;&nbsp;&nbsp; ';
 		});
+		if(_words.length >= SEARCH.maxhits && SEARCH.returnall){ _html += "<BR/>"+ "<span style=color:green;font-size:0.2em;>All results returned. Click <a href='javascript:SEARCH.returnall=false;process();window.scroll(0,0);return false;'>here</a> to see fewer results.</span><BR/>"; }
+
 		if(_words1)
 		$.each(_words1, function(a, word){
 			$.each( word.split(''), function(aa, letter){

@@ -7,6 +7,7 @@ span.r1 { color: red; }
 span.r2 { color: green; }
 span.r3 { color: blue; }
 span.r1, span.r2, span.r3 { font-weight: bold !important;}
+span.tiny {font-size: 0.3em;}
 #arabic				{ font-size: 5em; border: 1px solid #C3C3C3; padding: 10px;}
 #arabic1, Z#arabic2	{ font-size: 3.5em; border: 1px solid #C3C3C3; padding: 10px;}
 .suggest{
@@ -19,7 +20,9 @@ span.r1, span.r2, span.r3 { font-weight: bold !important;}
 .searchfield{
 	width: 250px;
 }
-
+.searchOutput{
+	width: 650px; border: 1px dashed #000000;padding:3px; //dotted dashed
+}
 .search-bubble, .suggest {
 -webkit-box-shadow: 0 2px 2px #888;
 background-color: rgba(204, 251, 93, 0.8);
@@ -65,7 +68,8 @@ margin-left: 20px;
 	<span style="margin-left: 2px;">&nbsp;</span>
 </span>
 <INPUT id=input class=searchfield TYPE=text value=Hmd></INPUT>
-<INPUT id=btn TYPE=button value="  Go  "></INPUT><BR/>
+<INPUT id=btn TYPE=button value="  Go  "></INPUT>&nbsp;&nbsp;&nbsp;&nbsp;
+<INPUT id=output class=searchOutput TYPE=text value=''></INPUT><BR/>
 <span class='suggest' id="suggest">&nbsp;</span> 
 
 <p style="font-size: 0.833em;"> <!--<img src="/images/expand.png" id="optionsImage" alttext="+"></img>-->
@@ -144,14 +148,7 @@ var ArToEn = function(word){
 					break;
 				}
 			}
-			if(!found){  ar += ''; 
-						 if(_bMAPPER_DEBUG){ 
-							if(typeof(UNKNOWNS) == NULL) UNKNOWNS={}; 
-							else{
-								if(!UNKNOWNS[letter]){ UNKNOWNS[letter] = 1; _log('No mapping found:\t' + letter + '');  }
-								else UNKNOWNS[letter] = 1+UNKNOWNS[letter];
-							}								
-						}
+			if(!found){  ar += '?'; _log('No mapping found:\t' + letter + ''); 
 			}
 		}
 	}catch(ex){
@@ -166,8 +163,8 @@ var initializeMapper = function(){
 	if(bInitialized) return;
 	var qBare = null, qBuck = null;		
 	var stopletters = "ۚۖۛۗۙ";
-	var chars='آ ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن ه و ي';
-	var buck = 'A A b t v j H x d * r z s $ S D T Z E g f q k l m n h w y';
+	var chars='آ ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن ه و ي آ';
+	var buck = 'A A b t v j H x d * r z s $ S D T Z E g f q k l m n h w y A';
 	var buckArr, charsArr;
 	var ext = new Array();
 	var map = { };
@@ -268,7 +265,7 @@ function isLtrText(text) {
 }
 
 
-	var _bYAMLI_ENABLED = false;
+	var _bYAMLI_ENABLED = true;
 	var SEARCH = { "0": '+ Show options', "1": '- Hide options',
 					"setting": 0,
 					"minchars": 2,
@@ -290,6 +287,13 @@ function isLtrText(text) {
 		$('#optionsLink').html( html );
 		searchOption( SEARCH.setting );
 	}
+	
+	function scrollToEnd(elementId){
+		var elem = document.getElementById(elementId);
+		elem.scrollTop = elem.scrollHeight;
+		document.getElementById(elementId).focus();
+	}
+
 	var _log = function(str){ console.log(str); }
 	var _words, _words1;
 	var search = function(input, regex){
@@ -302,6 +306,9 @@ function isLtrText(text) {
 			regex = "[ ]" + regex + "[ ]";
 		words = input.match( XRegExp(regex, "g") );
 		return words;
+	}
+	var onWordClick = function(word){
+		$('#output').val( $('#output').val() + ' ' + unescape(word) ); scrollToEnd('output');
 	}
 	var process = function(input){
 		var input = $('#input').val(), output='', regex1, regex2, words, status='';
@@ -333,17 +340,19 @@ function isLtrText(text) {
 		_words = search(LEMS_DICT, regex1);
 		_words1 = search(ROOTS_DICT, regex2);
 	
-		var _html = '', _html1 = '';
+		var _html = '', _html1 = '', _temp='';
 		if(_words) 
 		$.each(_words, function(a, word){
-			if(a>=SEARCH.maxhits && !SEARCH.returnall){ _html += "<BR/>"+ "<span style=color:maroon;font-size:0.2em;>Max results exceeded. Select <a href='javascript:SEARCH.returnall=true;process();return false;'>option</a> to see all results.</span><BR/>"; return false; }
-			else _html += EnToAr(word) + '&nbsp;&nbsp;&nbsp; ';
+			if(a>=SEARCH.maxhits && !SEARCH.returnall){ _html += "<BR/>"+ "<span style=color:maroon;font-size:0.2em;>Max results exceeded. Click <a href='javascript:SEARCH.returnall=true;process();return false;'>here</a> to see all results.</span><BR/>"; return false; }
+			else _html += '<A href=javascript:onWordClick("'+ escape(word) +'")>' + EnToAr(word) + '</A>&nbsp;&nbsp;&nbsp; ';
 		});
+		if(_words.length >= SEARCH.maxhits && SEARCH.returnall){ _html += "<BR/>"+ "<span style=color:green;font-size:0.2em;>All results returned. Click <a href='javascript:SEARCH.returnall=false;process();window.scroll(0,0);return false;'>here</a> to see fewer results.</span><BR/>"; }
+		
 		if(_words1)
-		$.each(_words1, function(a, word){
+		$.each(_words1, function(a, word){ _temp = '';
 			$.each( word.split(''), function(aa, letter){
-				_html1 += '<span class=r' + aa +'>' + EnToAr(letter) + '</span>&nbsp;';
-			});_html1 += '&nbsp;&nbsp;&nbsp;';
+				_temp += '<span class=r' + aa +'>' + EnToAr(letter) + '</span><span class=tiny>&nbsp;</span>';
+			});_html1 += '<A href=javascript:onWordClick("'+ escape(word) +'")>' + _temp + '</A>&nbsp;&nbsp;&nbsp;';
 		});
 		$('#arabic').html( _html );
 		$('#arabic1').html( _html1 );
