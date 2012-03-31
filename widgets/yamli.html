@@ -60,6 +60,10 @@ margin-left: 20px;
 }
 </style>
 
+<span class='yamli'>
+	<a href="#" onclick="toggleYamli(); return false;"><img src='images/yamli.bmp' width=14 height=12 style='width= 14px; height=12px;' /></a>
+	<span style="margin-left: 2px;">&nbsp;</span>
+</span>
 <INPUT id=input class=searchfield TYPE=text value=Hmd></INPUT>
 <INPUT id=btn TYPE=button value="  Go  "></INPUT><BR/>
 <span class='suggest' id="suggest">&nbsp;</span> 
@@ -95,6 +99,13 @@ var BuckToBare = function(str){ if(!str) return;
 	return str;
 }
 
+var isArabic = function (word){ if(!word) return; var arabic = ArToEn(word).trim();
+	return ('' != arabic && word.trim().length == arabic.length );
+}
+
+var isEnglish = function (word){ if(!word) return; var eng = EnToAr(word).trim();
+	return ('' != eng && word.trim().length == eng.length );
+}
 
 var EnToAr = function(word){
 	if(!word) return null;
@@ -235,6 +246,29 @@ initializeMapper();
 </script>
 
 <script>
+$('document').ready(function(){
+	//initializeUI(); onBuckInit();
+	//if(document && document.lastModified) $('#status').html( '<small>'+'Site last updated: <b>' + document.lastModified +'</b></small>' );
+	$('#suggest').hide();
+	$('#suggest').click( function(){ var suggestion = $('#suggest').text(); $("#input").val(suggestion); process(); } );
+});
+
+/******   CODE TO DETECT AUTO LTR OR RTL IN TEXTFIELD. Credit google.  *****/
+rtlDirCheckRe = /^[^A-Za-zÀ-ÖØ-öø-ʸ̀-֐ࠀ-῿Ⰰ-﬜﷾-﹯﻽-￿]*[֑-߿יִ-﷽ﹰ-ﻼ]/;
+ltrDirCheckRe = /^[^֑-߿יִ-﷽ﹰ-ﻼ]*[A-Za-zÀ-ÖØ-öø-ʸ̀-֐ࠀ-῿Ⰰ-﬜﷾-﹯﻽-￿]/;
+function checkDirection(elem) { if(!elem) elem = document.getElementById('input');
+	var text = elem.value;                 
+	elem.dir = isRtlText(text) ? 'rtl' : (isLtrText(text) ? 'ltr' : '');    
+}
+function isRtlText(text) {
+	return rtlDirCheckRe.test(text);
+}
+function isLtrText(text) {
+	return ltrDirCheckRe.test(text);
+}
+
+
+	var _bYAMLI_ENABLED = false;
 	var SEARCH = { "0": '+ Show options', "1": '- Hide options',
 					"setting": 0,
 					"minchars": 2,
@@ -270,13 +304,19 @@ initializeMapper();
 		return words;
 	}
 	var process = function(input){
-		var input = $('#input').val(), output='', regex1, regex2, words;
-
+		var input = $('#input').val(), output='', regex1, regex2, words, status='';
 		if(input == '') $('#suggest').html('').hide();
 		else{
-			var status = '<span class=biggerArabic>' + EnToAr(input) + '</span>';
-			$('#suggest').html( status ).show();
-			$('#suggest').width(   $('#suggest span').width()   );
+			if(isEnglish(input) ){
+				status = '<span class=biggerArabic>' + EnToAr(input) + '</span>';
+			}
+			else if(isArabic(input) ){
+				status = '<span>' + (input = ArToEn(input) ) + '</span>';
+			}
+			if(status && $.trim(status) != ""){ $('#suggest').html( status ).show();
+				$('#suggest').width(   $('#suggest span').width()   );
+			}else{ $('#suggest').html('').hide(); }
+			checkDirection();
 		}
 
 		if(input.length < SEARCH.minchars){ $('#arabic').html(''); $('#arabic1').html(''); return;}
@@ -310,6 +350,14 @@ initializeMapper();
 		_log('\n');	_log(_words); 
 		_log('\n'); _log(_words1);
 	}
+
+
+	//var _bYAMLI_ENABLED = false;
+	var toggleYamli = function(){ _bYAMLI_ENABLED = !_bYAMLI_ENABLED;
+		var id='input'; 
+		if(_bYAMLI_ENABLED) {Yamli.yamlify(id, {settingsPlacement: "inside", "generateOnChangeEvent": true}); $('#'+id).focus().select(); } 
+		else {  Yamli.deyamlify(id);}
+	}
 	
 	$('#btn').click( process );
 	$('#input').keyup(process);
@@ -321,20 +369,22 @@ initializeMapper();
 </script>
 
 
-<div>
+<span>
 You may now also type english (roman) letters in the search box and they will be
 automatically transformed into the arabic form used by the website search functionality.
 This may be of great benefit for those people who are not able for whatever reason to install
 and use an arabic keyboard and/or layout.
 So for example: If you search for "bqr" it will automatically become: "بقر" inshallah :)
-Here is the list of english letters  that will become their corresponding arabic letter:
-
-<pre>Non-Intuitive letters:
+Here is the list of english letters  that will become their corresponding arabic letter. This has been mostly based on the <a href="http://en.wikipedia.org/wiki/Arabic_chat_alphabet">Arabic Chat Alphabet</a>
+</span><BR/>
+<div style=float:left;padding:50px;><pre>
+Non-Intuitive letters:
 v -&gt; "ث"        g -&gt; "غ"
-x -&gt; "خ"        
-$ -&gt; "ش"
+$ -&gt; "ش"        x -&gt; "خ"
 * -&gt; "ذ"
+</pre></div>
 
+<div style=float:left;padding:50px;><pre>
 Different cases:
 d -&gt; "د"        t -&gt; "ت"
 D -&gt; "ض"        T -&gt; "ط"
@@ -342,21 +392,32 @@ z -&gt; "ز"        h -&gt; "ه"
 Z -&gt; "ظ"        H -&gt; "ح"
 s -&gt; "س"
 S -&gt; "ص"
+</pre></div>
 
+<div style=float:left;padding:50px;><pre>
 All other "normal" letters:
 a -&gt; "ا"        q -&gt; "ق"   
 b -&gt; "ب"        k -&gt; "ك"
 j -&gt; "ج"        l -&gt; "ل"
-7 -&gt; "ح"        m -&gt; "م"
+H -&gt; "ح"        m -&gt; "م"
 r -&gt; "ر"        n -&gt; "ن"
 E -&gt; "ع"        w -&gt; "و"
 f -&gt; "ف"        y -&gt; "ي"
-
-
+</pre>
+</div>
+<!--
 TODO / NOT YET IMPLEMENTED: Double letters:
 th -&gt; "ث"       gh -&gt; "غ"
 kh -&gt; "خ"       sh -&gt; "ش"
 dh -&gt; "ذ"
-</pre>
-This has been mostly based on the <a href="http://en.wikipedia.org/wiki/Arabic_chat_alphabet">Arabic Chat Alphabet</a>
-</div>
+-->
+
+<!-- YAMLI CODE START -->
+<script type="text/javascript" src="http://api.yamli.com/js/yamli_api.js"></script>
+<script type="text/javascript">
+  if (typeof(Yamli) == "object" && Yamli.init( { uiLanguage: "en" , startMode: "on" } )){ //off, offOrUserDefault
+	Yamli.yamlify( "input", { settingsPlacement: "inside" } ); //hide or inside
+	//Yamli.yamlify( "", { settingsPlacement: "hide" } ); //hide or inside
+  }
+</script>
+<!-- YAMLI CODE END -->
