@@ -7,6 +7,8 @@ span.r1 { color: red; }
 span.r2 { color: green; }
 span.r3 { color: blue; }
 span.r1, span.r2, span.r3 { font-weight: bold !important;}
+span.tiny {font-size: 0.3em;}
+span.small {font-size: 0.8em;}
 #arabic				{ font-size: 5em; border: 1px solid #C3C3C3; padding: 10px;}
 #arabic1, Z#arabic2	{ font-size: 3.5em; border: 1px solid #C3C3C3; padding: 10px;}
 .suggest{
@@ -19,7 +21,9 @@ span.r1, span.r2, span.r3 { font-weight: bold !important;}
 .searchfield{
 	width: 250px;
 }
-
+.searchOutput{
+	width: 650px; border: 1px dashed #000000;padding:3px; //dotted dashed
+}
 .search-bubble, .suggest {
 -webkit-box-shadow: 0 2px 2px #888;
 background-color: rgba(204, 251, 93, 0.8);
@@ -58,10 +62,20 @@ transition: all 0.5s ease-in-out;
 font-size: 24px;
 margin-left: 20px;
 }
+#arabic A, #arabic1 A{
+	cursor: help;
+	color: #3B5998;
+	text-decoration: overline;
+}
 </style>
 
+<span class='yamli'>
+	<a href="#" onclick="toggleYamli(); return false;"><img src='images/yamli.bmp' width=14 height=12 style='width= 14px; height=12px;' /></a>
+	<span style="margin-left: 2px;">&nbsp;</span>
+</span>
 <INPUT id=input class=searchfield TYPE=text value=Hmd></INPUT>
-<INPUT id=btn TYPE=button value="  Go  "></INPUT><BR/>
+<INPUT id=btn TYPE=button value="  Go  "></INPUT>&nbsp;&nbsp;&nbsp;&nbsp;
+<INPUT id=output class=searchOutput TYPE=text value=''></INPUT><BR/>
 <span class='suggest' id="suggest">&nbsp;</span> 
 
 <p style="font-size: 0.833em;"> <!--<img src="/images/expand.png" id="optionsImage" alttext="+"></img>-->
@@ -95,6 +109,22 @@ var BuckToBare = function(str){ if(!str) return;
 	return str;
 }
 
+var isArabic = function (word){ if(!word) return false; 
+	var regex = /^[\u0600-\u06ff]*$/, result=null;
+	$.each(word.split(''), function(a, token){
+		if(token){token = $.trim(token);
+			if(token != "-") //lets ignore hyphen
+				result == null ? result = regex.test( token ) : result = result && regex.test(token);
+		}
+	});
+	return result;
+	//var arabic = ArToEn(word).trim();
+	//return ('' != arabic && word.trim().length == arabic.length );
+}
+
+var isEnglish = function (word){ if(!word) return; var eng = EnToAr(word).trim();
+	return ('' != eng && word.trim().length == eng.length );
+}
 
 var EnToAr = function(word){
 	if(!word) return null;
@@ -133,14 +163,7 @@ var ArToEn = function(word){
 					break;
 				}
 			}
-			if(!found){  ar += ''; 
-						 if(_bMAPPER_DEBUG){ 
-							if(typeof(UNKNOWNS) == NULL) UNKNOWNS={}; 
-							else{
-								if(!UNKNOWNS[letter]){ UNKNOWNS[letter] = 1; _log('No mapping found:\t' + letter + '');  }
-								else UNKNOWNS[letter] = 1+UNKNOWNS[letter];
-							}								
-						}
+			if(!found){  ar += '?'; _log('No mapping found:\t' + letter + ''); 
 			}
 		}
 	}catch(ex){
@@ -155,8 +178,8 @@ var initializeMapper = function(){
 	if(bInitialized) return;
 	var qBare = null, qBuck = null;		
 	var stopletters = "ۚۖۛۗۙ";
-	var chars='آ ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن ه و ي';
-	var buck = 'A A b t v j H x d * r z s $ S D T Z E g f q k l m n h w y';
+	var chars='آ ا ب ت ث ج ح خ د ذ ر ز س ش ص ض ط ظ ع غ ف ق ك ل م ن ه و ي آ';
+	var buck = 'A A b t v j H x d * r z s $ S D T Z E g f q k l m n h w y A';
 	var buckArr, charsArr;
 	var ext = new Array();
 	var map = { };
@@ -167,7 +190,7 @@ var initializeMapper = function(){
 	charsArr.push( 'أ' ); buckArr.push( '>' );
 	charsArr.push( 'إ' ); buckArr.push( '<' );	//charsArr.push( ' ' ); buckArr.push( ' ' ); //charsArr.push( '' ); buckArr.push( '' );
 	charsArr.push( 'ئ' ); buckArr.push( '}' );
-	charsArr.push( 'ء' ); buckArr.push( 'X' ); //buckArr.push( '\'' );
+	charsArr.push( 'ء' ); buckArr.push( '\'' ); //buckArr.push( '\'' );
 	//charsArr.push( 'ة' ); buckArr.push( 'P' );
 	charsArr.push( 'ؤ' ); buckArr.push( '&' );
 	//missing characters for harakath.
@@ -197,7 +220,7 @@ var initializeMapper = function(){
 	charsArr.push( ' ' ); buckArr.push( ' ' );
 	charsArr.push( ';' ); buckArr.push( ';' );
 	charsArr.push( '\n' ); buckArr.push( '\n' );
-	
+/*	
 	charsArr.push( 'ع' ); buckArr.push( '3' ); //ayn //support for arabi/chat letters
 	charsArr.push( 'ء' ); buckArr.push( '2' ); //hamza
 	charsArr.push( 'ح' ); buckArr.push( '7' ); //HAA
@@ -227,7 +250,7 @@ var initializeMapper = function(){
 	charsArr.push( 'ۡ ' ); buckArr.push( '?' );
 	charsArr.push( 'ۚ ' ); buckArr.push( '?' );
 	charsArr.push( 'ۤ ' ); buckArr.push( '?' );
-
+*/
 	_charsArr = charsArr; _buckArr = buckArr;
 	bInitialized = true;
 }		
@@ -235,8 +258,31 @@ initializeMapper();
 </script>
 
 <script>
+$('document').ready(function(){
+	//initializeUI(); onBuckInit();
+	//if(document && document.lastModified) $('#status').html( '<small>'+'Site last updated: <b>' + document.lastModified +'</b></small>' );
+	$('#suggest').hide();
+	$('#suggest').click( function(){ var suggestion = $('#suggest').text(); $("#input").val(suggestion); process(); } );
+});
+
+/******   CODE TO DETECT AUTO LTR OR RTL IN TEXTFIELD. Credit google.  *****/
+rtlDirCheckRe = /^[^A-Za-zÀ-ÖØ-öø-ʸ̀-֐ࠀ-῿Ⰰ-﬜﷾-﹯﻽-￿]*[֑-߿יִ-﷽ﹰ-ﻼ]/;
+ltrDirCheckRe = /^[^֑-߿יִ-﷽ﹰ-ﻼ]*[A-Za-zÀ-ÖØ-öø-ʸ̀-֐ࠀ-῿Ⰰ-﬜﷾-﹯﻽-￿]/;
+function checkDirection(elem) { if(!elem) elem = document.getElementById('input');
+	var text = elem.value;                 
+	elem.dir = isRtlText(text) ? 'rtl' : (isLtrText(text) ? 'ltr' : '');    
+}
+function isRtlText(text) {
+	return rtlDirCheckRe.test(text);
+}
+function isLtrText(text) {
+	return ltrDirCheckRe.test(text);
+}
+
+
+	var _bYAMLI_ENABLED = false;
 	var SEARCH = { "0": '+ Show options', "1": '- Hide options',
-					"setting": 0,
+					"setting": 1,
 					"minchars": 2,
 					"maxhits": 10,
 					"returnall": false,
@@ -256,6 +302,13 @@ initializeMapper();
 		$('#optionsLink').html( html );
 		searchOption( SEARCH.setting );
 	}
+	
+	function scrollToEnd(elementId){
+		var elem = document.getElementById(elementId);
+		elem.scrollTop = elem.scrollHeight;
+		document.getElementById(elementId).focus();
+	}
+
 	var _log = function(str){ console.log(str); }
 	var _words, _words1;
 	var search = function(input, regex){
@@ -269,48 +322,67 @@ initializeMapper();
 		words = input.match( XRegExp(regex, "g") );
 		return words;
 	}
+	var onWordClick = function(word){
+		$('#output').val( $('#output').val() + ' ' + unescape(word) ); scrollToEnd('output');
+	}
 	var process = function(input){
-		var input = $('#input').val(), output='', regex1, regex2, words;
-
+		var input = $('#input').val(), output='', regex1, regex2, words, status='';
 		if(input == '') $('#suggest').html('').hide();
 		else{
-			var status = '<span class=biggerArabic>' + EnToAr(input) + '</span>';
-			$('#suggest').html( status ).show();
-			$('#suggest').width(   $('#suggest span').width()   );
+			if(isEnglish(input) ){
+				status = '<span class=biggerArabic>' + EnToAr(input) + '</span>';
+			}
+			else if(isArabic(input) ){
+				input = ArToEn(input);
+				status = '<span class=small>' + input + '</span>';
+			}
+			if(status && $.trim(status) != ""){ $('#suggest').html( status ).show();
+				$('#suggest').width(   $('#suggest span').width()   );
+			}else{ $('#suggest').html('').hide(); }
+			checkDirection();
 		}
 
 		if(input.length < SEARCH.minchars){ $('#arabic').html(''); $('#arabic1').html(''); return;}
 		regex1 = regex2 = input;
+		regex2 = XRegExp.escape(regex2); //coz can have chars like $ etc
 		var charsArr = input.split(''), regex1 = "", chr, repl = false, mapper = {'A': 'A{`><', 'w': 'w&', 'y': 'y}' };
 		for(var i=0; i<charsArr.length; ++i){ 
 			chr = charsArr[i];
 			if(chr == 'A' || chr == 'w' || chr == 'y') repl = true; else repl=false;
 			if(repl){
 				chr = '[' + XRegExp.escape( mapper[chr] ) + ']';
-			}
+			}else chr = XRegExp.escape(chr); //so escape the regex chars either way.
 			regex1 += chr + "[FNK#aeiou~\^]{0,3}";
 		}
 		_words = search(LEMS_DICT, regex1);
 		_words1 = search(ROOTS_DICT, regex2);
 	
-		var _html = '', _html1 = '';
+		var _html = '', _html1 = '', _temp='';
 		if(_words) 
-		$.each(_words, function(a, word){
-			if(a>=SEARCH.maxhits && !SEARCH.returnall){ _html += "<BR/>"+ "<span style=color:maroon;font-size:0.2em;>Max results exceeded. Click <a href='javascript:SEARCH.returnall=true;process();return false;'>here</a> to see all results.</span><BR/>"; return false; }
-			else _html += EnToAr(word) + '&nbsp;&nbsp;&nbsp; ';
+		$.each(_words, function(a, word){ word = $.trim(word);
+			if(a>=SEARCH.maxhits && !SEARCH.returnall){ _html += "<BR/>"+ "<span style=color:maroon;font-size:0.2em;>Max results exceeded. Click <a href='javascript:SEARCH.returnall=true;process();return false;'>here</a> to see all <b>" + _words.length + "</b> results.</span><BR/>"; return false; }
+			else _html += '<A href=javascript:onWordClick("'+ escape(word) +'")>' + EnToAr(word) + '</A>&nbsp;&nbsp;&nbsp; ';
 		});
 		if(_words && _words.length >= SEARCH.maxhits && SEARCH.returnall){ _html += "<BR/>"+ "<span style=color:green;font-size:0.2em;>All results returned. Click <a href='javascript:SEARCH.returnall=false;process();window.scroll(0,0);return false;'>here</a> to see fewer results.</span><BR/>"; }
-
+		
 		if(_words1)
-		$.each(_words1, function(a, word){
+		$.each(_words1, function(a, word){ _temp = ''; word = $.trim(word);
 			$.each( word.split(''), function(aa, letter){
-				_html1 += '<span class=r' + aa +'>' + EnToAr(letter) + '</span>&nbsp;';
-			});_html1 += '&nbsp;&nbsp;&nbsp;';
+				_temp += '<span class=r' + aa +'>' + EnToAr(letter) + '</span><span class=tiny>&nbsp;</span>';
+			});_html1 += '<A href=javascript:onWordClick("'+ escape(word) +'")>' + _temp + '</A>&nbsp;&nbsp;&nbsp;';
 		});
 		$('#arabic').html( _html );
 		$('#arabic1').html( _html1 );
 		_log('\n');	_log(_words); 
 		_log('\n'); _log(_words1);
+	}
+
+
+	//var _bYAMLI_ENABLED = false;
+	var toggleYamli = function(){ _bYAMLI_ENABLED = !_bYAMLI_ENABLED;
+		var id='input'; 
+		if(_bYAMLI_ENABLED) {Yamli.yamlify(id, {settingsPlacement: "inside", "generateOnChangeEvent": true}); $('#'+id).focus().select(); } 
+		else {  Yamli.deyamlify(id);}
 	}
 	
 	$('#btn').click( process );
@@ -365,6 +437,16 @@ th -&gt; "ث"       gh -&gt; "غ"
 kh -&gt; "خ"       sh -&gt; "ش"
 dh -&gt; "ذ"
 -->
+
+<!-- YAMLI CODE START -->
+<script type="text/javascript" src="http://api.yamli.com/js/yamli_api.js"></script>
+<script type="text/javascript">
+  if (typeof(Yamli) == "object" && Yamli.init( { uiLanguage: "en" , startMode: "off" } )){ //off, offOrUserDefault
+	Yamli.yamlify( "input", { settingsPlacement: "inside" } ); //hide or inside
+	//Yamli.yamlify( "", { settingsPlacement: "hide" } ); //hide or inside
+  }
+</script>
+<!-- YAMLI CODE END -->
 
 <script type="text/javascript" src="http://sdscdn.userreport.com/popup.min.js"></script>
 <script type="text/javascript">try { _bvt.initSite('2a56faaf-211f-4c5c-adec-50f76e0aaa9d'); } catch(err) {}</script>

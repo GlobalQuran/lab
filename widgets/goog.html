@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <title>Google AJAX Search API Sample</title>
+    <script src="http://www.google.com/jsapi?key=AIzaSyA5m1Nc8ws2BbmPRwKu5gFradvD_hgq6G0" type="text/javascript"></script>
+    <script type="text/javascript">
+    /*
+    *  How to setup a textarea that allows Transliteration from English to Arabic.
+    */
+    
+    // Load the Google Transliteration API
+    google.load("elements", "1", {packages: "transliteration"});
+    
+    function OnLoad() {
+      var options = {
+          sourceLanguage:
+              google.elements.transliteration.LanguageCode.ENGLISH,
+          destinationLanguage:
+              [google.elements.transliteration.LanguageCode.ARABIC],
+          shortcutKey: 'ctrl+g',
+          transliterationEnabled: true
+      };
+    
+      // Create an instance on TransliterationControl with the required
+      // options.
+      var control =
+          new google.elements.transliteration.TransliterationControl(options);
+    
+      // Create the HTML for our text area
+      var content = document.getElementById('content');
+      content.innerHTML = '<div id="ta3reebControl"> </div>'+
+                          '<div>Type a word and hit space to get it in Arabic. ' +
+                          'Click on a word to see more options.</div>' +
+                          '<textarea cols="100" rows="5" id="ta3reebTextarea"></textarea>' +
+                          '<div>Type in (do not copy/paste): ' +
+                          '<b>mar7aban bekom fee ta3reeb</b></div>';
+    
+      // Show the transliteration control which can be used to switch between
+      // English and Arabic.
+      control.showControl('ta3reebControl');
+    
+      // Enable transliteration in the textbox with id
+      // 'transliterateTextarea'.
+      control.makeTransliteratable(['ta3reebTextarea']);
+	  
+	  var translit = function(wordsArray){
+		  var srcLang, destLang, callback;
+		  srcLang = google.elements.transliteration.LanguageCode.ENGLISH;
+		  destLang = google.elements.transliteration.LanguageCode.ARABIC;
+		  callback = function(obj){
+			console.log(obj); _obj = obj;
+		  }
+		google.language.transliterate(wordsArray, srcLang, destLang, callback);
+	 }
+	 var wordsArray = ["iqra bismi rabbikallazi khalaq"], _obj;
+	 translit(wordsArray);
+    }
+    
+    google.setOnLoadCallback(OnLoad);
+    
+    </script>
+  </head>
+  <body style="font-family: Arial;border: 0 none;">
+    <div id="content">Loading...</div>
+  </body>
+</html>
+?
