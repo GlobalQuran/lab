@@ -1976,3 +1976,25 @@ var br = function(input){ if(!input) return; return '<span class="E GRMR">'+inpu
 var hotlinkify = function(input){ if(!input) return; return '<span class=hotlink>' + input + '</span>'; }
 var A = function(href, title, target){ if(!href) return; if(typeof(title)==NULL || !title) title=href; if(typeof(target)==NULL || !target) target=href; return '<a href="'+ href +'" target="'+ target + '" >'+title+'</a>';}
 
+var toggleSearchMode = function(){
+	var mode = $('#searchmode').html(), isOfflineMode = false;
+	isOfflineMode = (mode == 'online'); //this bool is new mode
+	mode = isOfflineMode ? 'Offline' : 'online';
+	$('#searchmode').html( mode );
+	
+	//Now bind appropriate search function
+	if(!isOfflineMode){
+		$('#searchForm').unbind('submit'); 
+		$('#searchForm').submit(function() {
+				$('body').trigger('search', [$('#search').val()]);
+				return false;
+		});
+	}else{
+		$('#searchForm').unbind('submit'); 
+		$('#searchForm').bind('submit', function(event){ 
+			event.preventDefault(); 
+			offlinesearch($('#search').val() ); 
+			return false; 
+		});
+	}
+}

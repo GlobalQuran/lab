@@ -896,6 +896,7 @@ var UIdisplayResults = function(refs, msg){
 		$.each(refs.split('; '), function(a, ref){
 			html += (a+1) + ') ' + UIlinkifySearchResult(ref) + '<BR/>';
 		});
+		html = '<div style=max-height:400px;overflow:scroll;>' + html + '</div';
 	}
 	$.blockUI({
 					message: '<BR/><h3>' + msg + '</h3><div style=font-size:3em;text-align:left;>' + html + '</div>',
