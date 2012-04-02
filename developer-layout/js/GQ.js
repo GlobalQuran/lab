@@ -156,14 +156,16 @@ var gq = {
 		
 		/**
 		 * gets the Quran text for all the selected Quran translation & Quran selections.
+		 * @param integer page (optional) if not passed then current page will be default page number
 		 * @returns {object}
 		 */
-		text: function ()
+		text: function (page)
 		{
+			var page = page || gq.page();
 			var text = {};
 			var selected = this.selected();
-			var fromVerseNo = Quran.verseNo.page(gq.settings.page);
-			var toVerseNo = Quran.verseNo.page(gq.settings.page+1)-1;
+			var fromVerseNo = Quran.verseNo.page(page);
+			var toVerseNo = Quran.verseNo.page(page+1)-1;
 
 			if (typeof selected == 'object')
 			{					
