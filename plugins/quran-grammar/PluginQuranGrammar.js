@@ -60,12 +60,17 @@ var CORPUS = {
 	},
 	
 	UIgetNearSynonyms: function(lemma){
-		var nearsynonyms = '', synonymFound = false, lemmaBare = BuckToBare(lemma);
+		var nearsynonyms = '', synonymFound = false, antonyms='', antonymFound = false, lemmaBare = BuckToBare(lemma);
 		if(NEAR_SYNONYMS && NEAR_SYNONYMS_METADATA){
 			$.each(NEAR_SYNONYMS, function(lineno, line){
 				if(line.indexOf(lemma) != -1 || BuckToBare(line).indexOf(lemmaBare) != -1 ){ //console.log(lemma + '\t\t' + line);
-					synonymFound = true; nearsynonyms = '';
-					nearsynonyms += EnToAr(line);
+					if(line.split('||').length <= 1){
+						synonymFound = true; nearsynonyms = '';
+						nearsynonyms += EnToAr(line);
+					}else{
+						antonymFound = true; antonyms = '';
+						antonyms += EnToAr(line);
+					}					
 					if( NEAR_SYNONYMS_METADATA[lineno]){
 						//nearsynonyms = NEAR_SYNONYMS_METADATA[a].split('|')[0] + nearsynonyms + NEAR_SYNONYMS_METADATA[a].split('|')[1];
 						nearsynonyms =  NEAR_SYNONYMS_METADATA[lineno].topic + '<BR/>' + nearsynonyms + '<BR/>' +  
@@ -75,7 +80,8 @@ var CORPUS = {
 				}
 			});
 		}
-		return synonymFound ? '<BR/><font color=green><b>near-Synonyms</b></font>: ' + nearsynonyms + '<BR/>' : '';
+		return (synonymFound ? '<BR/><font color=green><b>near-Synonyms</b></font>: ' + nearsynonyms + '<BR/>' : '') +
+			   (antonymFound ? '<BR/><font color=maroon><b>Antonyms</b></font>: ' + antonyms + '<BR/>' : '');
 	},
 	
 	UIgetNearSynonymsPageLink: function(pageno){
@@ -774,6 +780,26 @@ var NEAR_SYNONYMS = [
 "qara>a talY rat~ala darasa >amolY >amolaY`",
 "Eaduw~N bagoDaA^' $ana_#aAn $aAni} $AnyN",
 "qalob fu&Ad Sador nafos",
+
+//ANTONYMS START HERE...
+"||<ivom  bar~",
+"||>aviym  saliym",
+"||>abadFA  >azal~a",
+"||A^xir  >aw~al  saAbiq",
+"||A^xar  >aw~al",
+"||>ax~ara  qad~ama",
+"||yasotaqodimu yasota>oxiru",
+"||>aroD samaA^'",
+"||>aSol >aSiyl bukorap",
+"||>al~afa $at~aY`", //shatta didnt find in uniq, why??
+"|| >amara nahaY`",
+"||'aAmana kafara",
+"||>amon xawof",
+"||>ama`nat xiyaAnap",
+"||>unvaY` *akar", //zakar no found
+"||<ins jin~",
+"||<ins wH$",
+"||>aw~al A^xir",
 ];
 
 var NEAR_SYNONYMS_METADATA = {
@@ -870,6 +896,7 @@ var UIdisplayResults = function(refs, msg){
 		$.each(refs.split('; '), function(a, ref){
 			html += (a+1) + ') ' + UIlinkifySearchResult(ref) + '<BR/>';
 		});
+		html = '<div style=max-height:400px;overflow:scroll;>' + html + '</div';
 	}
 	$.blockUI({
 					message: '<BR/><h3>' + msg + '</h3><div style=font-size:3em;text-align:left;>' + html + '</div>',

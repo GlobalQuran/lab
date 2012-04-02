@@ -191,7 +191,7 @@ var layout = {
 					lastSurahTitle = val.surah;
 				}
 				
-				body += '<p class="ayah '+val.surah+'-'+val.ayah+'" '+fontFamily+'><span class="'+quranClass+'">'+layout.verseParse(quranBy, val.verse, val)+'</span> <a href="'+gq.url.hashless()+'#!/'+quranBy+'/'+val.surah+':'+val.ayah+'" class="ayahNumber" data-verse="'+verseNo+'"><span class="icon leftBracket"> </span>'+val.ayah+'<span class="icon rightBracket"> </span></a></p>';
+				body += '<p class="ayah '+val.surah+'-'+val.ayah+'" '+fontFamily+'><span class="'+quranClass+'">'+layout.verseParse(quranBy, val.verse, val)+'</span> <span class=tipsWord title="&lt;span class=hotlink&gt;&lt;span class=ayah data-verse='+verseNo+'&gt;Related verses to this one.<BR><BR><BR>&lt;/span&gt;&lt;/span&gt;"><a href="'+gq.url.hashless()+'#!/'+quranBy+'/'+val.surah+':'+val.ayah+'" class="ayahNumber" data-verse="'+verseNo+'"><span class="icon leftBracket"> </span>'+val.ayah+'<span class="icon rightBracket"> </span></a></span></p>';
 			});
 			body += '</div><div class="hr"><hr /></div>';
 		});
@@ -1857,7 +1857,8 @@ var UI_Tooltip_Handler = function(){
 					text: $(this).attr('title') || $(this).text()
 				},
 				show: {
-					ready: true
+					ready: true,
+					delay: 300
 				},
 			
 			 	hide: {
@@ -1906,7 +1907,11 @@ var UI_dohotlink = function( obj ){
 	o = $(obj).children();
 	$(o).each( function(){
 		_class = $(this).attr('class'); text = $(this).text(); //console.log(this); console.log(_class +' '+ text);
-		if(_class == 'ref'){ 
+		if(_class == 'ayah'){ 
+			var verseno = $(this).attr("data-verse");
+			if(verseno) $(this).html( UI_ayahHtml( verseno ) ); //$(this).html( URL.replace(/\$1/g, text ) );
+		}
+		else if(_class == 'ref'){ 
 			ref = $(this).text(); //$(this).html( URL.replace(/\$1/g, text ) );
 		}
 		else if(_class == 'grammar'){
@@ -1920,6 +1925,26 @@ var UI_dohotlink = function( obj ){
 	});
 }
 
+var UI_ayahLinkTemplate2 = '<li><A HREF=http://www.textminingthequran.com/apps/similarity.php?sura=$SURAH&verse=$AYAH&submit=Submit TARGET=_>$TITLE</A></li>',
+	UI_ayahLinkTemplate3  = '<li><A HREF=http://textminingthequran.com/cgi/sim-phrase.cgi?s=$SURAH&v=$AYAH&p=50 TARGET=_>$TITLE</A></li>',
+	UI_ayahLinkTemplate1  = '<li><A HREF=http://www.qtafsir.com/index.php?option=com_content&task=view&id=3000&Itemid=731 TARGET=_>$TITLE</A></li>',
+	UI_ayahLinkTemplate4  = '<li><A HREF="javascript:alert(\'TBD. Please suggest good source via feedback. jazakallah khair!\');return false;" TARGET=_>$TITLE</A></li>',
+	UI_ayahLinkTitle1 = '- Tafseer Ibn Kathir',
+	UI_ayahLinkTitle2 = '- related verses from Ibn Kathir',
+	UI_ayahLinkTitle3 = '- related verses by text similarity',
+	UI_ayahLinkTitle4 = '- Context for revelation <span style=font-size:0.8em;>(Shaan-e-Nuzul)</span>';
+var UI_ayahHtml = function( verseno ){ if(!(verseno = parseInt(verseno) ) ) return;
+	var surah, ayah, html;
+	surahno = Quran.ayah.fromVerse( verseno ).surah;
+	ayahno  = Quran.ayah.fromVerse( verseno ).ayah;
+	html = "<span style=font-size:0.6em!important;line-height:1em!important;>You might also be interested in this verse's...<BR><ul>" +
+		UI_ayahLinkTemplate1.replace(/\$SURAH/, surahno).replace(/\$AYAH/, ayahno ).replace(/\$TITLE/, UI_ayahLinkTitle1) +
+		UI_ayahLinkTemplate2.replace(/\$SURAH/, surahno).replace(/\$AYAH/, ayahno ).replace(/\$TITLE/, UI_ayahLinkTitle2) + 
+		UI_ayahLinkTemplate3.replace(/\$SURAH/, surahno).replace(/\$AYAH/, ayahno ).replace(/\$TITLE/, UI_ayahLinkTitle3) + 
+		UI_ayahLinkTemplate4.replace(/\$SURAH/, surahno).replace(/\$AYAH/, ayahno ).replace(/\$TITLE/, UI_ayahLinkTitle4) + 
+		"</ul></span>";
+	return html;
+}
 
 var UI_grammarHtml = function( text ){ CORPUS.isInitialized = true;
 	var html = '', corpus, refHtml='--';
@@ -1951,3 +1976,25 @@ var br = function(input){ if(!input) return; return '<span class="E GRMR">'+inpu
 var hotlinkify = function(input){ if(!input) return; return '<span class=hotlink>' + input + '</span>'; }
 var A = function(href, title, target){ if(!href) return; if(typeof(title)==NULL || !title) title=href; if(typeof(target)==NULL || !target) target=href; return '<a href="'+ href +'" target="'+ target + '" >'+title+'</a>';}
 
+var toggleSearchMode = function(){
+	var mode = $('#searchmode').html(), isOfflineMode = false;
+	isOfflineMode = (mode == 'online'); //this bool is new mode
+	mode = isOfflineMode ? 'Offline' : 'online';
+	$('#searchmode').html( mode );
+	
+	//Now bind appropriate search function
+	if(!isOfflineMode){
+		$('#searchForm').unbind('submit'); 
+		$('#searchForm').submit(function() {
+				$('body').trigger('search', [$('#search').val()]);
+				return false;
+		});
+	}else{
+		$('#searchForm').unbind('submit'); 
+		$('#searchForm').bind('submit', function(event){ 
+			event.preventDefault(); 
+			offlinesearch($('#search').val() ); 
+			return false; 
+		});
+	}
+}
