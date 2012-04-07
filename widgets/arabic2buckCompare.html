@@ -280,7 +280,11 @@ $('document').ready(function(){
 			console.log( ch + '\t\tx ' + ch.charCodeAt(0).toString(16) +'\t\t'+ _map[ ch ] ); 
 			$('#resultMissingChar').append( ''+TEMPLATE.replace(/\$CHAR/g, ch).replace(/\$CODE/g, ch.charCodeAt(0).toString(16) ) );
 		});
-	});	
+	});
+	
+	$('#arabic').live('click', function() {		
+		$(this).select();
+	});
 });
 </script>
  <div class="container">
