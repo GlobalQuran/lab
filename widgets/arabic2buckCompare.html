@@ -263,11 +263,24 @@ var notInBuck = function(map){
 	return mapdiff;
 }
 
+function reset ()
+{
+	$('#arabic').val('');
+	$('#result,#resultMissingChar').html('');
+}
+
 $('document').ready(function(){
+	$('.reset').live('click', function() {
+		reset();
+	});
+	
 	$('.compare').live('click', function() {
+		$('#result,#resultMissingChar').html('');
 		//initializeUI(); onBuckInit();
 		var dataisland1 = $('#arabic');
-		_text = dataisland1.text();
+		_text = dataisland1.val();
+		if (_text == '')
+			return false;
 		//_buck = ArToEn( _text );
 		//console.log( _buck );
 		_map = uniqueChars( _text );
@@ -392,7 +405,7 @@ $('document').ready(function(){
 ثُمَّ لَتُسْـَٔلُنَّ يَوْمَئِذٍ عَنِ ٱلنَّعِيمِ
 مِنَ ٱلْجِنَّةِ وَٱلنَّاسِ
 </textarea>
-<button class="btn btn-large btn-warning compare">Compare</button>
+<button class="btn btn-large btn-warning compare">Compare</button> <button class="btn btn-large reset">Reset</button>
 
 <br /><br />
 <p>These characters not found in Buckwalter transliteration:
