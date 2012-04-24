@@ -76,7 +76,7 @@ var layout = {
 				
 		this.after.load();
 		
-		/*						
+		/*	TODO attach it with main gq functions					
 		gq.layout.ayahChanged = function ()
 		{
 			layout.ayahChanged();
@@ -97,9 +97,6 @@ var layout = {
 		{
 			layout.recitorList();
 		};
-		
-		this.binds();
-		
 		*/
 	},
 	
@@ -319,8 +316,25 @@ var layout = {
 			html = '<ul class="recitorList">'+html+'</ul>';
 			
 			return html;
-		}
+		},
 		
+		surahList: function () //TODO
+		{
+			var surahTitle = '';
+			$('.customSurah').html('');
+			
+			for (i=1; i<= 114; i++)
+			{			
+				/* ie error, selectedBy undefined
+				if (gq.quran.length() == 1 && gq.quran.detail(gq.settings.selectedBy).language_code == 'ar')
+					surahTitle = Quran.surah.name(i, 'arabic_name');
+				else
+				*/
+					surahTitle = Quran.surah.name(i, 'english_name');
+				
+				$('.customSurah').append('<option value="'+i+'">'+surahTitle+'</option>');
+			}
+		}		
 	},
 	
 	bind: {
@@ -328,6 +342,7 @@ var layout = {
 		load: function()
 		{
 			this.quran();
+			this.menu();
 			this.link();
 			this.keyboard();
 		},
@@ -389,9 +404,9 @@ var layout = {
 			});
 		},
 		
-		
-		link: function()
+		menu: function()
 		{
+			// opening menu
 			$('.btn-menu').live('click', function() {
 				
 				if ($(this).hasClass('active'))
@@ -421,6 +436,7 @@ var layout = {
 				return false;				
 			});
 			
+			// open second menu for translation list
 			$('.translationLanguageList a').live('click', function() {
 				
 				var lang = $(this).data('lang'),
@@ -434,6 +450,67 @@ var layout = {
 				return false;
 			});
 			
+			
+			// select menu link
+			$('a[data-quran]').live('click', function()
+			{				
+				if ($(this).hasClass('active')) // if already selected
+				{
+					$(this).removeClass('active');
+					gq.quran.remove($(this).data('quran'));
+					gq.quran.load();
+					gq._gaqPush(['_trackEvent', 'QuranBy', 'remove',  $(this).text()]);
+				}
+				else // not selected yet, so select quran
+				{
+					$(this).addClass('active');
+					gq.quran.add($(this).data('quran'));
+					gq.quran.load();
+					gq._gaqPush(['_trackEvent', 'QuranBy', 'add',  $(this).text()]);
+				}
+				
+				$('.sideBarMenu, .sideBarMenu2').hide(); // if its open, then close it
+				$('.btn-menu').removeClass('active');
+							
+				return false;
+			});
+			
+			$('.recitorList a').live('click', function() // TODO
+			{
+				quranBy = $(this).attr('data-recitor-id');
+				
+				if (quranBy == 'auto' && !$(this).hasClass('active')) // remove all other selection on default (auto) selection
+				{
+					$('.recitorList .active').removeClass('active');
+					$(this).addClass('active');
+					gq.recitor.reset();
+				}
+				else if ($(this).hasClass('active'))
+				{
+					$(this).removeClass('active');
+					gq._gaqPush(['_trackEvent', 'Audio', 'recitorRemove', $(this).text()]);
+					gq.recitor.remove(quranBy);
+				}
+				else
+				{
+					$(this).addClass('active');
+					gq._gaqPush(['_trackEvent', 'Audio', 'recitorAdd', $(this).text()]);
+					gq.recitor.add(quranBy);
+				}
+				
+				if (gq.recitor.length == 0) // if none selected, select auto
+					$('.recitorList [data-recitor-id="auto"]').addClass('active');
+				else
+					$('.recitorList [data-recitor-id="auto"]').removeClass('active');
+							
+				
+				gq.player.reset();
+				gq.recitor.load();
+			});
+		},
+		
+		link: function()
+		{			
 			//TODO below is check on it and change it if need to
 			$('.ayahNumber, .bismillah, .prevSurah, .nextSurah').live('click', function() {
 				gq.player.reset();
@@ -528,130 +605,8 @@ var layout = {
 				$('body').trigger('search', [$('#search').val()]);
 				return false;
 			});
+						
 			
-			$('a.book').live('click', function()
-			{
-				if ($(this).hasClass('active'))
-				{
-					$(this).removeClass('active');
-					gq.settings.view = '';
-					layout.fullScreen(false);
-				}
-				else
-				{
-					$(this).addClass('active');
-					gq.settings.view = 'book';
-					layout.fullScreen(true);
-				}
-				
-				gq.quran.load();
-			});
-			
-			// search extra found rows hide/show
-			$('.foundin > a[data-quranBy]').live('click', function()
-			{
-				quranBy = $(this).attr('data-quranBy');
-				ayah = $(this).parents('.group').find('p[data-quranBy="'+quranBy+'"]');
-				if ($(this).hasClass('active'))
-				{
-					ayah.hide();
-					gq.search.removeQuranBy(quranBy);
-					$(this).removeClass('active');
-					$(this).attr('title', 'Show Text');
-				}
-				else
-				{
-					ayah.show();
-					gq.search.addQuranBy(quranBy);
-					$(this).addClass('active');				
-					$(this).attr('title', 'Hide Text');
-				}
-				
-				return false;
-			});
-			
-			// search extra found rows hide/show all.
-			$('.foundin > .showAll, .foundin > .hideAll').live('click', function()
-			{
-				if ($(this).hasClass('showAll'))
-				{
-					$(this).parents('.group').find('p').show();
-					$(this).parents('.group').find('.foundin > a').addClass('active').attr('title', 'Hide Text');
-					$(this).replaceWith('<a href="#" class="hideAll">hide all</a>');
-				}
-				else
-				{
-					$(this).parents('.group').find('p').hide();
-					$(this).parents('.group').find('.foundin > a').removeClass('active').attr('title', 'Show Text');;
-					$(this).replaceWith('<a href="#" class="showAll">show all</a>');
-				}
-				
-				return false;
-			});
-				
-			$('a[data-quranid]').live('click', function()
-			{	
-				//layout._autoScroll = false;
-				
-				if ($(this).attr('data-lang'))
-				{
-					$('#languageSearch').val($(this).text()).trigger('keyup').removeClass('placeholder');
-					return false;
-				}
-				
-				if ($(this).hasClass('active'))
-				{
-					$(this).removeClass('active');
-					gq.quran.remove($(this).attr('data-quranid'));
-					gq.quran.load();
-					gq._gaqPush(['_trackEvent', 'QuranBy', 'remove',  $(this).text()]);
-				}
-				else
-				{
-					$(this).addClass('active');
-					gq.quran.add($(this).attr('data-quranid'));
-					gq.quran.load();
-					gq._gaqPush(['_trackEvent', 'QuranBy', 'add',  $(this).text()]);
-				}
-				
-				if ($('#languageSearch').val() != '')
-					$('#languageSearch').val('').trigger('keyup');
-							
-				return false;
-			});
-			
-			$('.recitorList a').live('click', function()
-			{
-				quranBy = $(this).attr('data-recitor-id');
-				
-				if (quranBy == 'auto' && !$(this).hasClass('active')) // remove all other selection on default (auto) selection
-				{
-					$('.recitorList .active').removeClass('active');
-					$(this).addClass('active');
-					gq.recitor.reset();
-				}
-				else if ($(this).hasClass('active'))
-				{
-					$(this).removeClass('active');
-					gq._gaqPush(['_trackEvent', 'Audio', 'recitorRemove', $(this).text()]);
-					gq.recitor.remove(quranBy);
-				}
-				else
-				{
-					$(this).addClass('active');
-					gq._gaqPush(['_trackEvent', 'Audio', 'recitorAdd', $(this).text()]);
-					gq.recitor.add(quranBy);
-				}
-				
-				if (gq.recitor.length == 0) // if none selected, select auto
-					$('.recitorList [data-recitor-id="auto"]').addClass('active');
-				else
-					$('.recitorList [data-recitor-id="auto"]').removeClass('active');
-							
-				
-				gq.player.reset();
-				gq.recitor.load();
-			});
 			
 			$('.bandwidthList a').live('click', function()
 			{
@@ -664,23 +619,8 @@ var layout = {
 				gq.recitor.load();			
 			});
 			
-			//full screen
-			$('a.fullScreen').live('click', function() {		
-				layout.fullScreen(!$(this).hasClass('active'));			
-				return false;	
-			});
 			
-			// zoomIN, zoomOUT
-			$('a.zoomIN, a.zoomOUT').live('click', function()
-			{
-				var zoom = $(this).hasClass('zoomIN');			
-				if ($(this).hasClass('disable'))
-					return false;
-				
-				layout.fontSize(zoom);
-					
-				return false;
-			});
+			
 			
 			// langauge search
 			$('#languageSearch').live('keyup', function() {
@@ -700,16 +640,6 @@ var layout = {
 				
 				return false;
 			});
-			// show less quran, langauge list
-			$('#quranList .less, #translationList .less').live('click', function() {
-				$list = $(this).parents('ul');
-				if ($list.attr('id') == 'quranList')
-					layout.quranList(false);
-				else
-					layout.translationList(false, ($('#languageSearch').val() != $('#languageSearch').attr('placeholder')) ? $('#languageSearch').val() : '');
-				
-				return false;
-			});
 			
 			$('.wbwDirection').live('click', function() 
 			{
@@ -723,6 +653,24 @@ var layout = {
 			});
 		},
 		
+		player: function(){},//TODO
+		settings: function(){},//TODO
+		search: function(){},//TODO
+		
+		zoom: function()
+		{
+			// zoomIN, zoomOUT
+			$('.zoom-in, .zoom-out').live('click', function()
+			{
+				var zoom = $(this).hasClass('zoom-in');			
+				if ($(this).hasClass('disable'))
+					return false;
+				
+				layout.fontSize(zoom);//FIXME
+					
+				return false;
+			});
+		},
 		
 		keyboard: function()
 		{
